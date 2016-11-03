@@ -72,11 +72,12 @@ $ ansible-playbook shadowsocks-servers.yml --extra-vars "shadowsocks_password=my
 - [x] init.d script
 - [x] Tuning `sysctl` support
 - [x] Detect `tcp_fastopen`
-- [ ] Multiple users support
+- [x] Multiple users support
+- [x] Systemd script
 - [ ] Distro support
   - [x] EL
     - [ ] Better init.d script for 7
-  - [ ] Debian
+  - [x] Debian
   - [ ] Ubuntu
 
 ## License
@@ -89,3 +90,9 @@ GPLv3
 
 - Twitter: @[tunghsiao](http://twitter.com/tunghsiao)
 - GitHub: @[sparanoid](http://github.com/sparanoid)
+
+### Updated
+**Tr4sK**
+
+- Twitter: @[Tr4sK](http://twitter.com/tr4sk)
+- GitHub: @[Tr4sK](http://github.com/tr4sk)
