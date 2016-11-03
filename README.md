@@ -67,6 +67,7 @@ Install shadowsocks with multiple user support:
 - hosts: servers
   roles:
     - { role: tr4sk.shadowsocks, shadowsocks_user: "True" }
+```
 
 You can also define password in command line:
 
