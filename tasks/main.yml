@@ -1,11 +1,75 @@
 ---
-- name: include OS-specific variables.
+- name: Include OS-specific variables.
   include_vars: "{{ item }}"
   with_first_found:
    - "{{ ansible_distribution }}.yml"
    - "{{ ansible_os_family }}.yml"
    - "main.yml"
+- name: Install dependencies
+  action: "{{ ansible_pkg_mgr }} name={{ shadowsocks_dependencies | join(',') }} state=present"
+  tags: prepare
 
-# Setup/install tasks.
-- include: RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- name: Install PIP
+  easy_install:
+    name: pip
+  tags: prepare
+
+- name: Install ShadowSocks
+  pip:
+    name: shadowsocks
+    state: latest
+  notify: restart shadowsocks
+  tags: install
+
+- name: Assure ShadowSocks homedir exist
+  file:
+    path: "{{ shadowsocks_home }}"
+    state: directory
+
+- name: Generate config file
+  template:
+    src: shadowsocks.json
+    dest: "{{ shadowsocks_home }}/shadowsocks.json"
+    mode: 640
+    owner: root
+    group: root
+  notify: restart shadowsocks
+  tags: config
+
+- name: Generate service
+  template:
+    src: shadowsocks.service
+    dest: /etc/systemd/system/shadowsocks.service
+    mode: 755
+    owner: root
+    group: root
+  tags: config
+
+- name: Enable service
+  systemd:
+    name: shadowsocks
+    enabled: yes
+    state: started
+    daemon-reload: yes
+  tags: config
+
+- name: Tweak sysctl
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  with_items: "{{ shadowsocks_sysctl_params }}"
+  when: shadowsocks_sysctl_tweak
+  tags: sysctl
+
+- name: Enable tcp_fastopen if available
+  sysctl:
+    name: "net.ipv4.tcp_fastopen"
+    value: "3"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  when: shadowsocks_sysctl_tweak and ansible_kernel | version_compare('3.7', '>=')
+  tags: sysctl

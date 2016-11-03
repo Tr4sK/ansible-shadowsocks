@@ -8,6 +8,11 @@ shadowsocks_config_timeout: "600"
 shadowsocks_config_encryption_method: "aes-256-cfb"
 shadowsocks_config_fast_open: yes
 
+shadowsocks_user: True
+shadowsocks_user_db:
+  - { "name": "user1", "port": "8000", "pass", "apn!proxy!ss!ftw!" }
+  - { "name": "user2", "port": "9000", "pass", "apn!proxy!ss!ftw!" }
+
 shadowsocks_sysctl_tweak: yes
 shadowsocks_sysctl_params:
   - { "key": "fs.file-max", "value": "51200" }

@@ -1,0 +1,6 @@
+[Unit]
+Description=ShadowSocks secure socks5 proxy
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/ssserver -c {{ shadowsocks_home }}/shadowsocks.json

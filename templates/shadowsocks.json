@@ -1,6 +1,8 @@
 {
     "server": "{{ ansible_default_ipv4.address }}"
+  {% if not shadowsocks_user -%}
   , "server_port": {{ shadowsocks_config_server_port }}
+  {% endif -%}
   , "local_port": {{ shadowsocks_config_local_port }}
   , "password": "{{ shadowsocks_password }}"
   , "timeout": {{ shadowsocks_config_timeout }}
@@ -9,5 +11,13 @@
   , "fast_open": true
   {% else -%}
   , "fast_open": false
-  {% endif %}
+  {% endif -%}
+  {% if shadowsocks_user -%}
+  , "port_password": {
+  {% for user in shadowsocks_user_db -%}
+    "{{ user.port }}": "{{ user.pass }}"{% if not loop.last %},{% endif %}
+
+  {% endfor -%}
+  }
+  {% endif -%}
 }
