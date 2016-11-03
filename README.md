@@ -61,6 +61,13 @@ Install shadowsocks using custom specified password (default: `apn!proxy!ss!ftw!
     - { role: sparanoid.shadowsocks, shadowsocks_password: "myFancy@Passwd!" }
 ```
 
+Install shadowsocks with multiple user support:
+
+```yaml
+- hosts: servers
+  roles:
+    - { role: tr4sk.shadowsocks, shadowsocks_user: "True" }
+
 You can also define password in command line:
 
 ```shell
